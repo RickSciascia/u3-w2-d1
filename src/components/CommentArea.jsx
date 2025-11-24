@@ -1,37 +1,47 @@
-import { Component } from 'react'
-import CommentList from './CommentList'
-import AddComment from './AddComment'
-import Loading from './Loading'
-import Error from './Error'
+import { Component } from "react";
+import CommentList from "./CommentList";
+import AddComment from "./AddComment";
+import Loading from "./Loading";
+import Error from "./Error";
 
 class CommentArea extends Component {
   state = {
     comments: [],
     isLoading: true,
     isError: false,
-  }
+  };
 
-  componentDidMount = async () => {
+  getComments = async () => {
     try {
       let response = await fetch(
-        'https://striveschool-api.herokuapp.com/api/comments/' +
+        "https://striveschool-api.herokuapp.com/api/comments/" +
           this.props.asin,
         {
           headers: {
-            Authorization: 'Bearer inserisci-qui-il-tuo-token',
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTBkYmE2MmY0YmQ0NzAwMTU4NWIxZTciLCJpYXQiOjE3NjM2NDUwMTQsImV4cCI6MTc2NDg1NDYxNH0.SVsIVpn0w7k4FvHwlABUadvatF_-fo4jOPhPUI7KnL0",
           },
         }
-      )
-      console.log(response)
+      );
+      console.log(response);
       if (response.ok) {
-        let comments = await response.json()
-        this.setState({ comments: comments, isLoading: false, isError: false })
+        let comments = await response.json();
+        this.setState({ comments: comments, isLoading: false, isError: false });
       } else {
-        this.setState({ isLoading: false, isError: true })
+        this.setState({ isLoading: false, isError: true });
       }
     } catch (error) {
-      console.log(error)
-      this.setState({ isLoading: false, isError: true })
+      console.log(error);
+      this.setState({ isLoading: false, isError: true });
+    }
+  };
+  componentDidMount() {
+    this.getComments();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.asin !== this.props.asin) {
+      this.getComments();
     }
   }
 
@@ -43,8 +53,8 @@ class CommentArea extends Component {
         <AddComment asin={this.props.asin} />
         <CommentList commentsToShow={this.state.comments} />
       </div>
-    )
+    );
   }
 }
 
-export default CommentArea
+export default CommentArea;
