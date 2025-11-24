@@ -29,22 +29,26 @@ class BookList extends Component {
             </Form.Group>
           </Col>
         </Row>
-        <Row className="g-2 mt-3">
+        <Row className="mt-3">
+          <Col xs={12} md={8}>
+            <Row className="g-2">
+              {this.props.books
+                .filter((b) =>
+                  b.title.toLowerCase().includes(this.state.searchQuery)
+                )
+                .map((b) => (
+                  <Col xs={12} sm={6} md={4} key={b.asin}>
+                    <SingleBook
+                      book={b}
+                      changeBookSelected={this.changeBookSelectedState}
+                    />
+                  </Col>
+                ))}
+            </Row>
+          </Col>
           <Col xs={12} md={4}>
             <CommentArea asin={this.state.bookSelected} />
           </Col>
-          {this.props.books
-            .filter((b) =>
-              b.title.toLowerCase().includes(this.state.searchQuery)
-            )
-            .map((b) => (
-              <Col xs={12} md={3} key={b.asin}>
-                <SingleBook
-                  book={b}
-                  changeBookSelected={this.changeBookSelectedState}
-                />
-              </Col>
-            ))}
         </Row>
       </>
     );
